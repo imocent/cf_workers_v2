@@ -1,4 +1,0 @@
-name = "pxy"
-main = "src/worker.js"
-compatibility_date = "2025-12-14"
-workers_dev = true

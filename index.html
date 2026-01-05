@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>Workers Service Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont;
+            background: linear-gradient(135deg,#66ead7,#9461c8);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 420px;
+            width: 95%;
+            box-shadow: 0 10px 30px rgba(0,0,0,.15);
+        }
+        h1 { margin-top: 0; }
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 15px;
+        }
+        button {
+            background: #667eea;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .info {
+            background: #f5f7fa;
+            padding: 10px;
+            border-radius: 8px;
+            font-family: monospace;
+            word-break: break-all;
+            margin-top: 8px;
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Workers Service</h1>
+
+    <div id="login">
+        <input id="password" type="password" placeholder="请输入访问密码">
+        <button onclick="login()">登录</button>
+    </div>
+
+    <div id="panel" class="hidden">
+        <p>UUID</p>
+        <div class="info" id="uuid"></div>
+        <p>V2rayN 订阅</p>
+        <div class="info" id="v2ray"></div>
+        <button onclick="copy()">复制订阅链接</button>
+    </div>
+</div>
+<script>
+    // ====== 需要你改的地方 ======
+    const WORKER_DOMAIN = "https://pxy.imocence.workers.dev/";
+    const SUB_PATH = "link";
+    const UUID = "5dc15e15-f285-4a9d-959b-0e4fbdd7b666";
+    const PASSWORD = "winser";
+    // ==========================
+
+    function login() {
+        if (document.getElementById('password').value !== PASSWORD) {
+            alert('密码错误');
+            return;
+        }
+        document.getElementById('login').classList.add('hidden');
+        document.getElementById('panel').classList.remove('hidden');
+
+        document.getElementById('uuid').innerText = UUID;
+        document.getElementById('v2ray').innerText =`${WORKER_DOMAIN}/${SUB_PATH}`;
+    }
+
+    function copy() {
+        navigator.clipboard.writeText(
+            `${WORKER_DOMAIN}/${SUB_PATH}`
+        ).then(() => alert('已复制'));
+    }
+</script>
+</body>
+</html>
