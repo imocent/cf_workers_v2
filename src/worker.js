@@ -14,8 +14,7 @@ let disabletro = false;  // 是否关闭trojan, 设置为true时关闭，false�
 
 // CDN格式:优选域名:端口#备注名称、优选IP:端口#备注名称、[ipv6优选]:端口#备注名称、优选域名#备注
 let cfip = [
-    'mfa.gov.ua#SG', 'saas.sin.fan#HK', 'store.ubi.com#JP', 'cf.130519.xyz#KR', 'cf.008500.xyz#HK',
-    'cf.090227.xyz#SG', 'cf.877774.xyz#HK', 'cdns.doon.eu.org#JP', 'sub.danfeng.eu.org#TW', 'cf.zhetengsha.eu.org#HK'
+    'saas.sin.fan#HK', 'cf.130519.xyz#KR', 'cf.090227.xyz#SG', 'cf.877774.xyz#HK', 'sub.danfeng.eu.org#TW'
 ];
 
 function closeSocketQuietly(socket) {
