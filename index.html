@@ -5,351 +5,400 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workers Service</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style> * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: linear-gradient(135deg, #66ead7 0%, #9461c8 100%);
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #333;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-    }
-
-    .container {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        max-width: 800px;
-        width: 95%;
-        max-height: 90vh;
-        text-align: center;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-    }
-
-    .logout-btn {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #a7a0d8;
-        color: #dc2929;
-        border: none;
-        border-radius: 8px;
-        padding: 8px 16px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-    }
-
-    .logout-btn i {
-        font-size: 0.9rem;
-    }
-
-    .logout-btn:hover {
-        background: #e0e0e0;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .logo {
-        margin-bottom: -10px;
-        background: linear-gradient(45deg, #667eea, #764ba2);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .title {
-        font-size: 1.8rem;
-        margin-bottom: 8px;
-        color: #2d3748;
-    }
-
-    .subtitle {
-        color: #718096;
-        margin-bottom: 15px;
-        font-size: 1rem;
-    }
-
-    .info-card {
-        background: #f7fafc;
-        border-radius: 12px;
-        padding: 15px;
-        margin: 10px 0;
-        border-left: 3px solid #6ed8c9;
-        flex: 1;
-        overflow-y: auto;
-    }
-
-    .info-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 6px 0;
-        border-bottom: 1px solid #e2e8f0;
-        font-size: 0.9rem;
-    }
-
-    .info-item:last-child {
-        border-bottom: none;
-    }
-
-    .label {
-        font-weight: 600;
-        color: #4a5568;
-    }
-
-    .value {
-        color: rgb(20, 23, 29);
-        font-family: 'Courier New', monospace;
-        background: #edf2f7;
-        padding: 4px 8px;
-        border-radius: 6px;
-        font-size: 0.8rem;
-    }
-
-    .button-group {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin: 15px 0;
-    }
-
-    .btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 8px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-        transition: all 0.3s ease;
-        min-width: 100px;
-    }
-
-    .btn-primary {
-        background: linear-gradient(45deg, #667eea, #764ba2);
-        color: white;
-    }
-
-    .btn-secondary {
-        background: linear-gradient(45deg, #68e3d6, #906cc9);
-        color: #001379;
-    }
-
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .status {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #48bb78;
-        margin-right: 8px;
-        animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-        0% {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0.5;
-        }
-        100% {
-            opacity: 1;
-        }
-    }
-
-    .footer {
-        margin-top: 10px;
-        color: #718096;
-        font-size: 1rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .footer-links {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .footer-link {
-        color: #667eea;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        padding: 4px 8px;
-        border-radius: 6px;
-    }
-
-    .footer-link:hover {
-        background: rgba(102, 126, 234, 0.1);
-        transform: translateY(-1px);
-    }
-
-    .github-icon {
-        width: 16px;
-        height: 16px;
-        fill: currentColor;
-    }
-
-    .toast {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: rgb(244, 252, 247);
-        border-left: 4px solid #48bb78;
-        border-radius: 8px;
-        padding: 12px 16px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        z-index: 1000;
-        opacity: 0;
-        transform: translateX(100%);
-        transition: all 0.3s ease;
-        max-width: 300px;
-    }
-
-    .toast.show {
-        opacity: 1;
-        transform: translateX(0);
-    }
-
-    .toast-icon {
-        width: 20px;
-        height: 20px;
-        background: #48bb78;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 12px;
-        font-weight: bold;
-    }
-
-    .toast-message {
-        color: #2d3748;
-        font-size: 14px;
-        font-weight: 500;
-    }
-
-    @media (max-width: 768px) {
-        .container {
-            padding: 15px;
-            margin: 10px;
-            max-height: 95vh;
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .logout-btn {
-            top: 15px;
-            right: 15px;
-            padding: 6px 12px;
-            font-size: 0.8rem;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #7dd3ca 0%, #a17ec4 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .login-container, .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 95%;
+            max-width: 400px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .main-container {
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            flex-direction: column;
+            position: relative;
+            padding: 20px;
+            display: none; /* 默认隐藏主页面 */
+        }
+
+        .login-container {
+            display: none; /* 默认隐藏登录页面 */
+        }
+
+        .show {
+            display: flex !important; /* 主页面需要flex布局 */
+        }
+
+        .login-container.show {
+            display: block !important; /* 登录页面需要block布局 */
         }
 
         .logo {
-            font-size: 2rem;
+            margin-bottom: -10px;
+        }
+
+        .logo img {
+            width: 96px;
+            height: 96px;
         }
 
         .title {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #2d3748;
         }
 
-        .button-group {
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
+        .subtitle {
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 1rem;
         }
 
-        .btn {
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-input {
             width: 100%;
-            max-width: 180px;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            background: #fff;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-login, .btn {
+            width: 100%;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #12cd9e 0%, #a881d0 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-login:hover, .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #a7a0d8;
+            color: #dc2929;
+            border: none;
+            border-radius: 8px;
             padding: 8px 16px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
         }
 
-        .info-item {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 4px;
+        .logout-btn.show {
+            display: flex;
         }
 
-        .value {
-            word-break: break-all;
-            font-size: 0.8rem;
-        }
-
-        .footer-links {
-            flex-direction: column;
-            gap: 10px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .container {
-            padding: 10px;
-            margin: 5px;
+        .logout-btn:hover {
+            background: #e0e0e0;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .info-card {
-            padding: 10px;
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 3px solid #6ed8c9;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.9rem;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .value {
+            color: rgb(20, 23, 29);
+            font-family: 'Courier New', monospace;
+            background: #edf2f7;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            max-width: 60%;
+            word-break: break-all;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #68e3d6, #906cc9);
+            color: #001379;
+            min-width: 100px;
+        }
+
+        .status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #48bb78;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .footer {
+            margin-top: 20px;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .footer-link {
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .footer-link:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .github-icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #e53e3e;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
         }
 
         .toast {
-            top: 10px;
-            right: 10px;
-            left: 10px;
-            max-width: none;
-            transform: translateY(-100%);
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgb(244, 252, 247);
+            border-left: 4px solid #48bb78;
+            border-radius: 8px;
+            padding: 12px 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            max-width: 300px;
         }
 
         .toast.show {
-            transform: translateY(0);
+            opacity: 1;
+            transform: translateX(0);
         }
-    } </style>
+
+        .toast-icon {
+            width: 20px;
+            height: 20px;
+            background: #48bb78;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 15px;
+                margin: 10px;
+                max-height: 95vh;
+            }
+
+            .login-container {
+                padding: 30px 20px;
+            }
+
+            .logout-btn {
+                top: 15px;
+                right: 15px;
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 180px;
+            }
+
+            .info-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .value {
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container, .login-container {
+                padding: 10px;
+                margin: 5px;
+            }
+
+            .info-card {
+                padding: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-<button onclick="logout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span>退出登录</span></button>
-<div class="container">
-    <div class="logo"><img src="https://img.icons8.com/color/96/cloudflare.png" alt="Logo"></div>
+<!-- 登录页面 -->
+<div id="loginPage" class="login-container">
+    <div class="logo"><img src="./cloudflare.png" alt="Logo"></div>
+    <h1 class="title">Workers Service</h1>
+    <p class="subtitle">请输入密码以访问服务</p>
+
+    <div id="errorMessage" class="error-message">密码错误，请重试</div>
+
+    <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+            <input type="password" id="password" name="password" class="form-input" placeholder="请输入密码" required autofocus>
+        </div>
+        <button type="submit" class="btn-login">登录</button>
+    </form>
+    <div class="footer">
+        <p>Powered by x <a href="#" target="_blank" style="color: #007bff; text-decoration: none;">html</a></p>
+    </div>
+</div>
+
+<!-- 主页面 -->
+<button id="logoutBtn" class="logout-btn" onclick="logout()">
+    <i class="fas fa-sign-out-alt"></i> <span>退出登录</span>
+</button>
+
+<div id="mainPage" class="main-container">
+    <div class="logo"><img src="./cloudflare.png" alt="Logo"></div>
     <h1 class="title">Workers Service</h1>
     <p class="subtitle">基于 Cloudflare Workers 的高性能网络服务 (VLESS + Trojan)</p>
+
     <div class="info-card">
         <div class="info-item">
             <span class="label">服务状态</span>
@@ -357,7 +406,8 @@
         </div>
         <div class="info-item">
             <span class="label">V2rayN订阅地址</span>
-            <span class="value">https://sublink.eooce.com/xray?config=https%3A%2F%2Fpxy.imocence.workers.dev%2F5dc15e15-f285-4a9d-959b-0e4fbdd7b666&ua=</span></div>
+            <span class="value">https://sublink.eooce.com/xray?config=https%3A%2F%2Fpxy.imocence.workers.dev%2F5dc15e15-f285-4a9d-959b-0e4fbdd7b666&ua=</span>
+        </div>
         <div class="info-item">
             <span class="label">Clash订阅地址</span>
             <span class="value">https://sublink.eooce.com/clash?config=https://pxy.imocence.workers.dev/link</span>
@@ -367,49 +417,131 @@
             <span class="value">https://sublink.eooce.com/singbox?config=https://pxy.imocence.workers.dev/link</span>
         </div>
     </div>
+
     <div class="button-group">
         <button onclick="copySingboxSubscription()" class="btn btn-secondary">复制singbox订阅链接</button>
         <button onclick="copyClashSubscription()" class="btn btn-secondary">复制Clash订阅链接</button>
         <button onclick="copySubscription()" class="btn btn-secondary">复制V2rayN订阅链接</button>
     </div>
+
     <div class="footer">
-        <div class="footer-links"><a href="https://github.com/eooce/CF-Workers-VLESS" target="_blank" class="footer-link">
-            <svg class="github-icon" viewBox="0 0 24 24">
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.479-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-            </svg>
-            <span>GitHub 项目地址</span> </a> <a href="https://check-proxyip.ssss.nyc.mn/" target="_blank" class="footer-link">
-            <span>✅</span> <span>Proxyip 检测服务</span> </a> <a href="https://t.me/eooceu" target="_blank" class="footer-link">
-            <span>📱</span> <span>Telegram 反馈交流群</span> </a></div>
+        <p>Powered by x <a href="#" target="_blank" style="color: #007bff; text-decoration: none;">html</a></p>
+        <div class="footer-links">
+            <a href="https://github.com/imocent/cf_workers_v2" target="_blank" class="footer-link">
+                <svg class="github-icon" viewBox="0 0 24 24">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.479-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                <span>GitHub 项目地址</span>
+            </a>
+        </div>
     </div>
 </div>
-<script>
-    const baseUrl = "https://pxy.imocence.workers.dev";
-    const subPath = "/link";
 
+<script>
+    // 获取URL参数
+    const urlParams = new URLSearchParams(window.location.search);
+    const passwordParam = urlParams.get('password');
+    const correctPassword = "winser"; // 设置你的密码
+
+    // 页面元素
+    const loginPage = document.getElementById('loginPage');
+    const mainPage = document.getElementById('mainPage');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // 初始化页面状态
+    function initPage() {
+        console.log("初始化页面，密码参数:", passwordParam);
+
+        if (passwordParam === correctPassword) {
+            // 密码正确，显示主页面
+            console.log("密码正确，显示主页面");
+            loginPage.classList.remove('show');
+            mainPage.classList.add('show');
+            logoutBtn.classList.add('show');
+            errorMessage.classList.remove('show');
+        } else {
+            // 密码错误或未登录，显示登录页面
+            console.log("密码错误或未登录，显示登录页面");
+            loginPage.classList.add('show');
+            mainPage.classList.remove('show');
+            logoutBtn.classList.remove('show');
+
+            // 如果有密码参数但密码错误，显示错误信息
+            if (passwordParam && passwordParam !== correctPassword) {
+                errorMessage.classList.add('show');
+            } else {
+                errorMessage.classList.remove('show');
+            }
+        }
+    }
+
+    // 登录处理
+    function handleLogin(event) {
+        event.preventDefault();
+        const password = document.getElementById('password').value;
+
+        console.log("尝试登录，输入密码:", password);
+
+        if (password === correctPassword) {
+            console.log("登录成功");
+            const currentUrl = new URL(window.location);
+            currentUrl.searchParams.set('password', password);
+            window.location.href = currentUrl.toString();
+        } else {
+            console.log("密码错误");
+            errorMessage.classList.add('show');
+            document.getElementById('password').value = '';
+            document.getElementById('password').focus();
+        }
+    }
+
+    // 退出登录
+    function logout() {
+        if (confirm('确定要退出登录吗?')) {
+            const currentUrl = new URL(window.location);
+            currentUrl.searchParams.delete('password');
+            window.location.href = currentUrl.toString();
+        }
+    }
+
+    // 复制功能
     function showToast(message) {
         const existingToast = document.querySelector('.toast');
         if (existingToast) { existingToast.remove(); }
+
         const toast = document.createElement('div');
         toast.className = 'toast';
+
         const icon = document.createElement('div');
         icon.className = 'toast-icon';
         icon.textContent = '✓';
+
         const messageDiv = document.createElement('div');
         messageDiv.className = 'toast-message';
         messageDiv.textContent = message;
+
         toast.appendChild(icon);
         toast.appendChild(messageDiv);
         document.body.appendChild(toast);
+
         setTimeout(() => { toast.classList.add('show'); }, 10);
+
         setTimeout(() => {
             toast.classList.remove('show');
-            setTimeout(() => { if (toast.parentNode) { toast.parentNode.removeChild(toast); } }, 300);
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 300);
         }, 1500);
     }
 
     function copySubscription() {
         const configUrl = 'https://pxy.imocence.workers.dev/link';
-        navigator.clipboard.writeText(configUrl).then(() => { showToast('V2rayN订阅链接已复制到剪贴板!'); }).catch(() => {
+        navigator.clipboard.writeText(configUrl).then(() => {
+            showToast('V2rayN订阅链接已复制到剪贴板!');
+        }).catch(() => {
             const textArea = document.createElement('textarea');
             textArea.value = configUrl;
             document.body.appendChild(textArea);
@@ -421,8 +553,10 @@
     }
 
     function copyClashSubscription() {
-        const clashUrl = 'https://sublink.eooce.com/clash?config=${baseUrl}/${subPath}';
-        navigator.clipboard.writeText(clashUrl).then(() => { showToast('Clash订阅链接已复制到剪贴板!'); }).catch(() => {
+        const clashUrl = 'https://sublink.eooce.com/clash?config=https://pxy.imocence.workers.dev/link';
+        navigator.clipboard.writeText(clashUrl).then(() => {
+            showToast('Clash订阅链接已复制到剪贴板!');
+        }).catch(() => {
             const textArea = document.createElement('textarea');
             textArea.value = clashUrl;
             document.body.appendChild(textArea);
@@ -434,8 +568,10 @@
     }
 
     function copySingboxSubscription() {
-        const singboxUrl = 'https://sublink.eooce.com/singbox?config=${baseUrl}/${subPath}';
-        navigator.clipboard.writeText(singboxUrl).then(() => { showToast('singbox订阅链接已复制到剪贴板!'); }).catch(() => {
+        const singboxUrl = 'https://sublink.eooce.com/singbox?config=https://pxy.imocence.workers.dev/link';
+        navigator.clipboard.writeText(singboxUrl).then(() => {
+            showToast('singbox订阅链接已复制到剪贴板!');
+        }).catch(() => {
             const textArea = document.createElement('textarea');
             textArea.value = singboxUrl;
             document.body.appendChild(textArea);
@@ -446,12 +582,11 @@
         });
     }
 
-    function logout() {
-        if (confirm('确定要退出登录吗?')) {
-            const currentUrl = new URL(window.location);
-            currentUrl.searchParams.delete('password');
-            window.location.href = currentUrl.toString();
-        }
-    } </script>
+    // 页面加载时初始化
+    document.addEventListener('DOMContentLoaded', initPage);
+
+    // 监听URL变化（后退/前进按钮）
+    window.addEventListener('popstate', initPage);
+</script>
 </body>
 </html>
